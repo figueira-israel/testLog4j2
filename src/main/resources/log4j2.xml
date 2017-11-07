@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Configuration status="INFO">
+	<Appenders>
+		<Console name="Console" target="SYSTEM_OUT">
+			<PatternLayout
+				pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n" />
+		</Console>
+
+		<Routing name="demsAppender">
+			<Routes pattern="$${ctx:threadName}">
+				<Route>
+					<RollingFile name="myAppender-${ctx:threadName}"
+						append="true"
+						fileName="logs/${ctx:demsDirectory}/demsLog-end.log" 
+						filePattern="logs/${ctx:demsDirectory}/demsLog-%i.log">
+						<PatternLayout
+				pattern="%d{yyyy-MM-dd HH:mm:ss} [%t] %-5level %logger{36} - %msg%n" />
+						<Policies>
+							<SizeBasedTriggeringPolicy  size="5 MB" />
+						</Policies>
+						<DefaultRolloverStrategy fileIndex="nomax"  />
+					</RollingFile>
+				</Route>
+			</Routes>
+		</Routing>
+
+
+	</Appenders>
+	<Loggers>
+		<Root level="DEBUG">
+			<AppenderRef ref="Console" />
+		</Root>
+
+		<Logger name="demsLog" level="DEBUG">
+			<AppenderRef level="DEBUG" ref="demsAppender" />
+		</Logger>
+	</Loggers>
+</Configuration>
